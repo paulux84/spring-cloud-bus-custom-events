@@ -1,1 +1,6 @@
-spring.application.index: ${random.uuid} # this ensures that our applicationId is unique
+spring.application.index: ${random.uuid} # this work with spring boot 1.5 and spring cloud previous Finchley
+spring:
+  cloud:
+    bus:
+      id: ${random.uuid} # this not work with spring boot 2 and spring cloud Finchley
+
