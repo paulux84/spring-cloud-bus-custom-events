@@ -2,9 +2,8 @@ package com.tndavidson.example;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.cloud.bus.BusProperties;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,18 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class PublishEndpoint {
 
     private ApplicationContext context;
+    private BusProperties busProperties;
 
     @Autowired
-    public PublishEndpoint(ApplicationContext context) {
-        this.context = context;
+    public PublishEndpoint(ApplicationContext context, BusProperties busProperties) {
+        this.context = context; this.busProperties=busProperties;
     }
 
     @RequestMapping(value="/publish",method= RequestMethod.POST)
     public String publish() {
-        final String myUniqueId = context.getId(); // each service instance must have a unique context ID
 
         final MyCustomRemoteEvent event =
-                new MyCustomRemoteEvent(this, myUniqueId, "hello world");
+                new MyCustomRemoteEvent(this, busProperties.getId(), "hello world");
 
         context.publishEvent(event);
 
